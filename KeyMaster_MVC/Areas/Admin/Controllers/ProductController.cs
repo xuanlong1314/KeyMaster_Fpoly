@@ -175,7 +175,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();
-            TempData["success"] = "Xóa sản phẩm thành công";
+            TempData["success"] = "Xóa sản phẩm thành công !!";
             return RedirectToAction("Index");
         }
     }
