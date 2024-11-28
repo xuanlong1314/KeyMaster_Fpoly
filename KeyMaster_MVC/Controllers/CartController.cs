@@ -15,7 +15,7 @@ namespace KeyMaster_MVC.Controllers
 
         public IActionResult Index()
         {
-            List<CartItemModel> cartItems = HttpContext.Session.Getjson<List<CartItemModel>>("cart") ?? new List<CartItemModel>();
+            List<CartItemModel> cartItems = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
             CartItemViewModel cartVN = new()
             {
                 CartItems = cartItems,
@@ -30,89 +30,89 @@ namespace KeyMaster_MVC.Controllers
         public async Task<IActionResult> Add(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
-            List<CartItemModel> cart = HttpContext.Session.Getjson<List<CartItemModel>>("cart") ?? new List<CartItemModel>();
-            CartItemModel cartItem = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+            List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+            CartItemModel cartItem = Cart.Where(c => c.ProductId == Id).FirstOrDefault();
             if (cartItem == null)
             {
-                cart.Add(new CartItemModel(product));
+                Cart.Add(new CartItemModel(product));
             }
             else
             {
                 cartItem.Quantity += 1;
             }
-            HttpContext.Session.Setjson("cart", cart);
+            HttpContext.Session.Setjson("Cart", Cart);
 
-            TempData["success"] = "Add Item to cart successfully";
+            TempData["success"] = "Add Item to Cart successfully";
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public async Task<IActionResult> Decrease(int Id)
         {
-            List<CartItemModel> cart = HttpContext.Session.Getjson<List<CartItemModel>>("cart");
-            CartItemModel cartItem = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+            List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+            CartItemModel cartItem = Cart.Where(c => c.ProductId == Id).FirstOrDefault();
             if (cartItem.Quantity > 1)
             {
                 --cartItem.Quantity;
             }
             else
             {
-                cart.RemoveAll(p => p.ProductId == Id);
+                Cart.RemoveAll(p => p.ProductId == Id);
             }
-            if (cart.Count == 0)
+            if (Cart.Count == 0)
             {
-                HttpContext.Session.Remove("cart");
+                HttpContext.Session.Remove("Cart");
             }
             else
             {
-                HttpContext.Session.Setjson("cart", cart);
+                HttpContext.Session.Setjson("Cart", Cart);
             }
-            TempData["success"] = "Decrease Item quantity to cart successfully";
+            TempData["success"] = "Decrease Item quantity to Cart successfully";
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Increase(int Id)
         {
-            List<CartItemModel> cart = HttpContext.Session.Getjson<List<CartItemModel>>("cart");
-            CartItemModel cartItem = cart.Where(c => c.ProductId == Id).FirstOrDefault();
+            List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+            CartItemModel cartItem = Cart.Where(c => c.ProductId == Id).FirstOrDefault();
             if (cartItem.Quantity >= 1)
             {
                 ++cartItem.Quantity;
             }
             else
             {
-                cart.RemoveAll(p => p.ProductId == Id);
+                Cart.RemoveAll(p => p.ProductId == Id);
             }
-            if (cart.Count == 0)
+            if (Cart.Count == 0)
             {
-                HttpContext.Session.Remove("cart");
+                HttpContext.Session.Remove("Cart");
             }
             else
             {
-                HttpContext.Session.Setjson("cart", cart);
+                HttpContext.Session.Setjson("Cart", Cart);
             }
-            TempData["success"] = "Increase Item quantity to cart successfully";
+            TempData["success"] = "Increase Item quantity to Cart successfully";
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Remove(int Id)
         {
-            List<CartItemModel> cart = HttpContext.Session.Getjson<List<CartItemModel>>("cart");
-            cart.RemoveAll(p => p.ProductId == Id);
+            List<CartItemModel> Cart = HttpContext.Session.Getjson<List<CartItemModel>>("Cart");
+            Cart.RemoveAll(p => p.ProductId == Id);
 
-            if (cart.Count == 0)
+            if (Cart.Count == 0)
             {
-                HttpContext.Session.Remove("cart");
+                HttpContext.Session.Remove("Cart");
             }
             else
             {
-                HttpContext.Session.Setjson("cart", cart);
+                HttpContext.Session.Setjson("Cart", Cart);
             }
-            TempData["success"] = "Remove Item of cart successfully";
+            TempData["success"] = "Remove Item of Cart successfully";
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Clear(int Id)
         {
-            HttpContext.Session.Remove("cart");
-            TempData["success"] = "Clear all Item cart successfully";
+            HttpContext.Session.Remove("Cart");
+            TempData["success"] = "Clear all Item Cart successfully";
             return RedirectToAction("Index");
         }
     }
