@@ -31,7 +31,7 @@ namespace KeyMaster_MVC.Models
 
         public CategoryModel Category { get; set; }
         public BrandModel Brand { get; set; }
-        public string Image { get; set; } = "noimage.jpg";
+        public string Image { get; set; }
 
         [NotMapped]
         [FileExtension]
