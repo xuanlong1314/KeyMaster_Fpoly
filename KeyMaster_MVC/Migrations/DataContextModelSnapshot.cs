@@ -169,6 +169,8 @@ namespace KeyMaster_MVC.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("orderDetails");
                 });
 
@@ -368,6 +370,17 @@ namespace KeyMaster_MVC.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("KeyMaster_MVC.Models.OrderDetails", b =>
+                {
+                    b.HasOne("KeyMaster_MVC.Models.ProductModel", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("KeyMaster_MVC.Models.ProductModel", b =>

@@ -27,6 +27,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+//builder.Services.AddRazorPages();
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings.
@@ -55,8 +57,10 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
+
+app.UseAuthentication(); // đăng nhập
+
+app.UseAuthorization(); // kiểm tra quyền
 
 app.MapControllerRoute(
     name: "Areas",
