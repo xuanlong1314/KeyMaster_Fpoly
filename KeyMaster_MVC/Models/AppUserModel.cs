@@ -11,7 +11,6 @@ namespace KeyMaster_MVC.Models
         [ForeignKey("RoleId")]
         public string RoleId { get; set; }
 
-        // Navigation property to IdentityRole (optional, useful for accessing Role information directly)
         public virtual IdentityRole Role { get; set; }
     }
 }

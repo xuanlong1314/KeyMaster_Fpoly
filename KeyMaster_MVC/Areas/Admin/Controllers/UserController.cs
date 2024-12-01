@@ -75,6 +75,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(user);
         }
 
+
         [HttpGet]
         [Route("Delete")]
         public async Task<IActionResult> Delete(string Id)
