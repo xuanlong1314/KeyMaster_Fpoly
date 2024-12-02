@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Order")]
     [Authorize(Roles = "Admin")]
     public class OrderController : Controller
     {
@@ -18,6 +19,8 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         {
             return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
         }
+        [HttpGet]
+        [Route("ViewOrder")]
         public async Task<IActionResult> ViewOrder(string ordercode)
         {
             var DetailsOrder = await _dataContext.orderDetails.Include(od => od.Product).Where(od => od.OrderCode == ordercode).ToListAsync();

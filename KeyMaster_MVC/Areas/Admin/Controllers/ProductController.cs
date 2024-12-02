@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("admin")]
+    [Route("Admin/Product")]
     [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {

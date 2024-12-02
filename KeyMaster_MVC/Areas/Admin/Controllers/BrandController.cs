@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Brand")]
     [Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
@@ -21,12 +22,14 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create(BrandModel brand)
         {
             if (ModelState.IsValid)
@@ -62,6 +65,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);
@@ -70,6 +74,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(BrandModel brand)
         {
             if (ModelState.IsValid)
@@ -104,6 +109,8 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(brand);
         }
         [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);

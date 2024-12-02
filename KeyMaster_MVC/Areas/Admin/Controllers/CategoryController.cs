@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Category")]
     [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
@@ -23,12 +24,14 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create(CategoryModel category)
         {
             if (ModelState.IsValid)
@@ -64,6 +67,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             CategoryModel category = await _dataContext.Categories.FindAsync(Id);
@@ -72,6 +76,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(CategoryModel category)
         {
             if (ModelState.IsValid)
@@ -106,6 +111,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(category);
         }
         [HttpGet]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
             CategoryModel category = await _dataContext.Categories.FindAsync(Id);
