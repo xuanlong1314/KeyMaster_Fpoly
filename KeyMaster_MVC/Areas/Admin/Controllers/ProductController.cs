@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly DataContext _dataContext;
@@ -24,6 +24,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name");
@@ -33,6 +34,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create(ProductModel product)
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
@@ -81,6 +83,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(product);
         }
         [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
@@ -90,6 +93,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(ProductModel product, int Id)
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
@@ -176,6 +180,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(product);
         }
         [HttpGet]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
             // Tìm sản phẩm theo Id

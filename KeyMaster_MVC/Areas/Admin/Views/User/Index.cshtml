@@ -19,10 +19,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>UserName</th>
                 <th>Email</th>
-                <th>PasswordHash</th>
                 <th>Phone</th>
                 <th>Role</th>
             </tr>
@@ -31,10 +29,8 @@
             @foreach (var usersWithRoles in Model)
             {
                 <tr>
-                    <td>@usersWithRoles.User.Id</td>
                     <td>@usersWithRoles.User.UserName</td>
                     <td>@usersWithRoles.User.Email</td>
-                    <td>@usersWithRoles.User.PasswordHash</td>
                     <td>@usersWithRoles.User.PhoneNumber</td>
                     <td>@usersWithRoles.RoleName</td> <!-- Corrected from RodeName to RoleName -->
                     <td>

@@ -10,7 +10,8 @@ using System.Drawing.Drawing2D;
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Route("Admin/User")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly UserManager<AppUserModel> _userManager;
