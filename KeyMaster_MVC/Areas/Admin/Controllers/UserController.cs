@@ -74,7 +74,66 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(user);
         }
+        [HttpGet]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string Id)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+            return View(user);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string Id ,AppUserModel user)
+        {
+            var existingUser = await _userManager.FindByIdAsync(Id); // lấy user dựa vào Id
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Update other user properties (excluding password)
+                existingUser.UserName = user.UserName;
+                existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.RoleId = user.RoleId;
+
+                var updateUserResult = await _userManager.UpdateAsync(existingUser);
+                if (updateUserResult.Succeeded)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    foreach (var error in updateUserResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(existingUser);
+                }
+            }
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+
+            //Model validation failed 
+            TempData["error"] = "Cập nhật user không thành công";
+            var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage).ToList());
+            string errorMessage = string.Join("\n", errors);
+            return View(existingUser);
+        }
 
         [HttpGet]
         [Route("Delete")]
