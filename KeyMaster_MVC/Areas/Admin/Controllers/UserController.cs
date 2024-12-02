@@ -15,17 +15,23 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
     {
         private readonly UserManager<AppUserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly DataContext _dataContext;
 
-        public UserController(UserManager<AppUserModel> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(DataContext context,UserManager<AppUserModel> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _dataContext = context;
         }
         [HttpGet]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            return View(await _userManager.Users.OrderByDescending(p => p.Id).ToListAsync());
+            var usersWithRoles = await (from u in _dataContext.Users
+                                        join ur in _dataContext.UserRoles on u.Id equals ur.UserId
+                                        join r in _dataContext.Roles on ur.RoleId equals r.Id
+                                        select new { User = u, RoleName = r.Name }).ToListAsync();
+            return View(usersWithRoles);
         }
         [HttpGet]
         [Route("Create")]
@@ -40,11 +46,34 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create(AppUserModel user)
         {
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+
             if (ModelState.IsValid)
             {
                 var createUserResult = await _userManager.CreateAsync(user, user.PasswordHash);
                 if (createUserResult.Succeeded)
                 {
+                    var createUser = await _userManager.FindByEmailAsync(user.Email); // tìm user dựa vào email
+                    var userId = createUser.Id; // lấy user Id
+                    var role = await _roleManager.FindByIdAsync(user.RoleId); // tìm role dựa vào RoleId
+                    if (role == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Role không hợp lệ.");
+                        return View(user);
+                    }
+
+                    // gán quyền cho user
+                    var addToRoleResult = await _userManager.AddToRoleAsync(createUser, role.Name);
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        foreach (var error in addToRoleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View(user);
+                    }
+
                     return RedirectToAction("Index", "User");
                 }
                 else
@@ -70,7 +99,6 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
                 string errorMessage = string.Join("\n", errors);
                 return BadRequest(errorMessage);
             }
-            var roles = await _roleManager.Roles.ToListAsync();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(user);
         }
