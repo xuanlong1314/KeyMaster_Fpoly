@@ -85,7 +85,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             return View(product);
         }
         [HttpGet]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
@@ -93,9 +93,10 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
             return View(product);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(ProductModel product, int Id)
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
