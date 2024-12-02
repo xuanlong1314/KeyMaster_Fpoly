@@ -95,7 +95,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Edit")]
-        public async Task<IActionResult> Edit(string Id ,AppUserModel user)
+        public async Task<IActionResult> Edit(string Id, AppUserModel user)
         {
             var existingUser = await _userManager.FindByIdAsync(Id); // lấy user dựa vào Id
             if (existingUser == null)
@@ -151,10 +151,11 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
             var deleteResult = await _userManager.DeleteAsync(user);
             if (!deleteResult.Succeeded)
             {
-               return View("Error");
+                return View("Error");
             }
             TempData["success"] = "User đã được xóa thành công";
             return RedirectToAction("Index");
         }
     }
 }
+
