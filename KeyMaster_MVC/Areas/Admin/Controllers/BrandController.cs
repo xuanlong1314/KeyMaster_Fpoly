@@ -65,7 +65,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);
@@ -74,14 +74,14 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(BrandModel brand)
         {
             if (ModelState.IsValid)
             {
                 //code thêm dữ liệu
                 brand.Slug = brand.Name.Replace(" ", "-");
-                var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == brand.Slug);
+                var slug = await _dataContext.Brands.FirstOrDefaultAsync(p => p.Slug == brand.Slug && p.Id != brand.Id); // sửa chỗ này
                 if (slug != null)
                 {
                     ModelState.AddModelError("", "Thương hiệu đã tồn tại");

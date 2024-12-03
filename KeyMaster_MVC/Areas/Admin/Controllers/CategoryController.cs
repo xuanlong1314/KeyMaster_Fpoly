@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Drawing2D;
 
 namespace KeyMaster_MVC.Areas.Admin.Controllers
 {
@@ -67,7 +68,7 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(int Id)
         {
             CategoryModel category = await _dataContext.Categories.FindAsync(Id);
@@ -76,14 +77,14 @@ namespace KeyMaster_MVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Edit")]
+        [Route("Edit/{Id}")]
         public async Task<IActionResult> Edit(CategoryModel category)
         {
             if (ModelState.IsValid)
             {
                 //code thêm dữ liệu
                 category.Slug = category.Name.Replace(" ", "-");
-                var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == category.Slug);
+                var slug = await _dataContext.Categories.FirstOrDefaultAsync(p => p.Slug == category.Slug && p.Id != category.Id); // sửa chỗ này
                 if (slug != null)
                 {
                     ModelState.AddModelError("", "Danh mục đã tồn tại");
