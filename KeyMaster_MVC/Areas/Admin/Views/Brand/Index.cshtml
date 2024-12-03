@@ -1,6 +1,13 @@
 ﻿@model IEnumerable<BrandModel>
 @{
-    ViewData["Title"] = "Brand Listed";
+    ViewData["title"] = "List Category";
+    Paginate pager = new Paginate();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 <h3>List Brand</h3>
 <a asp-action="Create" asp-controller="Brand">Add Brand</a>

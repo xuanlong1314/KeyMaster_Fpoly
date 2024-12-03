@@ -1,4 +1,5 @@
-﻿using KeyMaster_MVC.Models;
+﻿using KeyMaster_MVC.Areas.Admin.Repository;
+using KeyMaster_MVC.Models;
 using KeyMaster_MVC.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["ConnectionStrings:ConnectedDb"]);
 });
+//Add EmailSender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Thêm Identity
 builder.Services.AddIdentity<AppUserModel, IdentityRole>()

@@ -1,4 +1,5 @@
-﻿using KeyMaster_MVC.Models;
+﻿using KeyMaster_MVC.Areas.Admin.Repository;
+using KeyMaster_MVC.Models;
 using KeyMaster_MVC.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -8,9 +9,11 @@ namespace KeyMaster_MVC.Controllers
     public class CheckoutController : Controller
     {
         private readonly DataContext _dataContext;
-        public CheckoutController(DataContext context)
+        private readonly IEmailSender _emailSender;
+        public CheckoutController(DataContext context,IEmailSender emailSender)
         {
             _dataContext = context;
+            _emailSender = emailSender;
         }
         public async Task<IActionResult> Checkout()
         {
@@ -42,7 +45,14 @@ namespace KeyMaster_MVC.Controllers
                     _dataContext.SaveChanges();
                 }
                 HttpContext.Session.Remove("Cart");
-                TempData["Success"] = "Checkout thành công,vui lòng chờ duyệt đơn hàng";
+                //send email
+                TempData["success"] = "Đăng nhập thành công";
+                var receiver = userEmail;
+                var subject = "Đặt hàng thành công";
+                var message = "Đặt hàng thành công,vui lòng chờ nhận hàng";
+                await _emailSender.SendEmailAsync(receiver, subject, message);
+
+                TempData["Success"] = "Đơn hàng đã được tạo,vui lòng chờ duyệt đơn hàng";
                 return RedirectToAction("Index", "Cart");
 
             }
